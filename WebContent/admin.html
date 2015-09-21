@@ -1,0 +1,103 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <title>Charity</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css\bootstrap-duallistbox.min.css" rel="stylesheet" type="text/css" media="all">
+  <link rel="stylesheet" href="css\bootstrap.min.css">
+  <style type="text/css">
+  		.center{
+  			position: absolute;
+  			top: 30%; 
+  			left:22%; 
+            }
+  		.btn-primary{
+  			width:30%;
+  			margin-left: 35%;
+ 		    margin-bottom: 5%;
+            margin-top: 14px;
+          }
+          body { 
+ 			background-image: url("resources/charity5.jpg");
+			background-repeat: no-repeat;
+ 			background-position: center center-fixed;
+  			-webkit-background-size: cover;
+ 			-moz-background-size: cover;
+ 			-o-background-size: cover;
+			 background-size: cover;
+          }
+          #list{
+   				-webkit-appearance: menulist-button;
+ 			     height: 250px;
+          }
+          .bootstrap-duallistbox-container .filter {
+                height:40px;
+          }
+          .form-control{
+               font-size:25px;   
+          }
+  </style>
+  <body>
+      <div class="container center">
+          <div class="row">
+               <div class="col-md-1"></div>
+               <div class="col-md-10">
+                   <select multiple="multiple" size="10" id="list"></select>
+                   <button class="btn-lg btn-primary">submit</button> 
+               </div>
+               <div class="col-md-1"></div>
+          </div>
+      </div>
+
+  </body>
+    <script src="js\jquery.js"></script>
+<script src="js\jquery.bootstrap-duallistbox.min.js"></script>
+    <script type="text/javascript">
+  $(document).ready(function(){
+          $.ajax({
+              url:"http://localhost:8080/Charity/api/charity/SelectedProducts",
+              type:"GET",
+              headers:{"Accept":"application/json;odata=verbose"},
+              success:function(data){
+                       for(var i in data.Products){
+                             if(data.Products[i].selected=="true")
+                               var item=$('<option selected=\"selected\">'+data.Products[i].Product+'</option>');
+                             else
+                                 var item=$('<option>'+data.Products[i].Product+'</option>');
+                          $('#list').append(item);
+                      }
+              },
+              error:function(data){
+                alert("error");
+              },
+              async:false
+      });
+          $('#list').bootstrapDualListbox({
+              bootstrap2compatible    : false,
+              preserveselectiononmove : false,            // 'all' / 'moved' / false
+              moveonselect            : true,             // true/false (forced true on androids, see the comment later)
+              initialfilterfrom       : '',               // string, filter selectables list on init
+              initialfilterto         : '',               // string, filter selected list on init
+              helperselectnamepostfix     : '_helper',    // 'string_of_postfix' / false
+              infotext: 'Showing all {0}',// text when all options are visible / false for no info text
+              infotextfiltered        : '<span class="label label-warning">Filtered</span> {0} from {1}',// when not all of the options are visible due to the filter
+              selectorminimalheight   : 100,
+              showfilterinputs        : true,
+              filterplaceholder       : 'Filter',
+              filtertextclear         : 'show all',
+              nonselectedlistlabel    : false,            // 'string', false
+              selectedlistlabel       : false,            // 'string', false
+              filteronvalues          : false             // filter by selector's values, boolean
+});
+
+  $('button').on('click',function(){
+        var rr=[];
+        $('#bootstrap-duallistbox-selected-list_ option').each(function(i,selected){
+               rr[i] = $(selected).text(); 
+        });
+        alert(rr);
+  });
+});
+</script>
+</html>

@@ -1,0 +1,143 @@
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	<title>Charity</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css\bootstrap.min.css">
+	<style type="text/css">
+		.center{
+		      position: absolute;
+	  		  top: 25%; 
+	  		  left:18%;	
+		}
+		.form-btn{
+			  width:30%;
+              margin-left: 50%;
+              margin-bottom: 5%;
+		}
+		body { 
+ 			background-image: url("resources/charity5.jpg");
+			background-repeat: no-repeat;
+ 			background-position: center center-fixed;
+  			-webkit-background-size: cover;
+ 			-moz-background-size: cover;
+ 			-o-background-size: cover;
+			 background-size: cover;
+}
+		
+	</style>
+	</head>
+	<body>
+		<div class="container center">
+	       <div class="row">
+	       	<div class="col-md-3"></div>
+	       	<div class="col-md-6">
+	       		<form class="form-horizontal">
+	       			<div class="form-group">	
+	                    <label for="inputName" class="control-label col-md-4">Name</label>
+	            		<div class="col-md-8">
+	                		<input type="text" class="form-control" id="inputName" placeholder="Name" name="inputName" required autofocus>
+	            		</div>
+	       			</div>
+	       			<div class="form-group">
+	                    <label for="inputEmail" class="control-label col-md-4">Email</label>
+	            		<div class="col-md-8">
+	                		<input type="email" class="form-control" id="inputEmail" placeholder="Email" name="inputEmail" required>
+	            		</div>
+	       			</div>
+	       			<div class="form-group">
+	                    <label for="inputEmpId" class="control-label col-md-4">Employee Id</label>
+	            		<div class="col-md-8">
+	                		<input type="text" class="form-control" id="inputEmpId" placeholder="Employee Id" name="inputEmpId" required>
+	            		</div>
+	       			</div>
+	       			<div class="form-group">
+	                    <label for="inputContactNumber" class="control-label col-md-4">Contact Number</label>
+	            		<div class="col-md-8">
+	                		<input type="text" class="form-control" id="inputContactNumber" placeholder="Contact Number" name="inputContactNumber" required>
+	            		</div>
+	       			</div>
+	       			<div class="form-group">
+	                    <label for="inputProduct" class="control-label col-md-4">Product</label>
+	            		<div class="col-md-8">
+	                		<select  class="form-control" id="inputProduct" name="inputProduct" required>
+	                		       <option>Select an option</option>
+	                		</select>
+	            		</div>
+	       			</div>
+	       			<div class="form-group">
+	       					<label for="inputQty" class="control-label col-md-4">Quantity</label>
+	       					<div class="col-md-5">
+	       							<input type="text" class="form-control" id="inputQty" placeholder="Quantity" name="inputQty" required>
+	       					</div>
+	       					<div class="col-md-3">
+	       							<input type="text" class="form-control" id="inputMetrics" placeholder="Metrics" name="inputMetrics" required>
+	       					</div>
+	       			</div>
+	       			<div class="form-group">
+	                    <label for="inputPrice" class="control-label col-md-4">Price</label>
+	            		<div class="col-md-8">
+	                		<input type="text" class="form-control" id="inputPrice" placeholder="Price" name="inputPrice">
+	            		</div>
+	       			</div>
+	       			<button class="form-btn btn-lg btn-primary" type="submit">Submit</button>
+	       		</form>
+	       	</div>
+	       	<div class="col-md-3"></div>
+		 </div>
+		</div>
+	</body>
+	<script src="js\jquery.js"></script>
+	<script src="js\bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$.ajax({
+	            url:"http://localhost:8080/Charity/api/charity/Products",
+	            type:"GET",
+	            headers:{"Accept":"application/json;odata=verbose"},
+	            success:function(data){
+	                     for(var i in data.Products){
+                 	      		var item=$('<option data-price='+data.Products[i].Price+' data-metrics='+data.Products[i].metrics+' >'+data.Products[i].Product+'</option>');
+                		  		$('#inputProduct').append(item);
+                		  }
+	            },
+	            error:function(data){
+	            	alert("error");
+	            },
+	            async: false
+			});
+			
+			$('#inputProduct').on('change',function(){
+			      $('#inputQty').val("");
+			      $('#inputPrice').val("");
+			      var metrics= $('option:selected', this).data('metrics');
+			      $('#inputMetrics').val(metrics);
+			});
+			$('#inputQty').on('keyup',function(){
+			      var price= $('option:selected', '#inputProduct').data('price');
+			      var qty=$('#inputQty').val();
+			      $('#inputPrice').val(price*qty);
+			});
+			
+			$('button').on('click',function(e){
+			    var jsonObjects = [{id:1, name:"amit"}, {id:2, name:"ankit"},{id:3, name:"atin"},{id:1, name:"puneet"}];
+			    
+                $.ajax({
+	            url:"http://localhost:8080/Charity/api/charity/CreateProducts",
+	            type:"POST",
+	            data:{students:JSON.stringify(jsonObjects)},
+	            success:function(data){
+	   
+	            },
+	            error:function(data){	
+	            	alert("error");
+	            },
+	            async:false
+			});    	
+		
+        });
+			
+		});
+	</script>
+	</html>
